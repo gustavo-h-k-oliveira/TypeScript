@@ -1,4 +1,5 @@
 type Pizza = { 
+    id: number
     name: string
     price: number
 }
@@ -6,14 +7,14 @@ type Pizza = {
 type Order = {
     id: number
     pizza: Pizza
-    status: string
+    status: "ordered" | "completed" 
 }
 
 const menu: Pizza[] = [
-    { name: "Margherita", price: 8 },
-    { name: "Pepperoni", price: 10 },
-    { name: "Hawaiian", price: 10 },
-    { name: "Veggie", price: 9 },
+    { id: 1, name: "Margherita", price: 8 },
+    { id: 2, name: "Pepperoni", price: 10 },
+    { id: 3, name: "Hawaiian", price: 10 },
+    { id: 4, name: "Veggie", price: 9 },
 ]
 
 let cashInRegister: number = 100
@@ -39,19 +40,35 @@ function placeOrder(pizzaName: string): Order | void {
 function completeOrder(orderId: number): Order | void {
     const order = orderQueue.find(order => order.id === orderId)
     if (!order) {
-        console.log(`Id ${orderId} not found.`)
+        console.error(`Id ${orderId} not found.`)
         return
     }
     order.status = "completed"
     return order
 }
 
-addNewPizza({ name: "Chicken Bacon Ranch", price: 12 })
-addNewPizza({ name: "BBQ Chicken", price: 12 })
-addNewPizza({ name: "Spicy Sausage", price: 11 })
+function getPizzaDetail(identifier: string | number) {
+    if ((typeof identifier) === 'string') {
+        return menu.find(pizzaObj => pizzaObj.name.toLowerCase() === identifier.toLowerCase())
+    }
+    else if ((typeof identifier) === 'number') {
+        return menu.find(pizzaObj => pizzaObj.id === identifier)
+    }
+    else {
+        console.log(`Identifier ${identifier} not found.`)
+    }
+}
+
+addNewPizza({ id: 5, name: "Chicken Bacon Ranch", price: 12 })
+addNewPizza({ id: 6, name: "BBQ Chicken", price: 12 })
+addNewPizza({ id: 7, name: "Spicy Sausage", price: 11 })
 
 placeOrder("Chicken Bacon Ranch")
 completeOrder(1)
+completeOrder(2) // Non existent
+
+getPizzaDetail(3)
+getPizzaDetail("Veggie")
 
 console.log("Menu:", menu)
 console.log("Cash in register:", cashInRegister)
