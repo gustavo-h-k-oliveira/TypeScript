@@ -1,49 +1,56 @@
-const menu = [
-    { name: "Margherita", price: 8 },
-    { name: "Pepperoni", price: 10 },
-    { name: "Hawaiian", price: 10 },
-    { name: "Meat Feast", price: 12 },
-    { name: "Veggie", price: 9 }
-]
-
-let cashInRegister = 100
-const orderQueue = []
-let nextOrderId = 1
-
-function addnewPizza(pizzaObj) {
-    menu.push(pizzaObj)
-    console.log("Adding pizza: ")
-    return menu
+var menu = [
+    { id: 1, name: "Margherita", price: 8 },
+    { id: 2, name: "Pepperoni", price: 10 },
+    { id: 3, name: "Hawaiian", price: 10 },
+    { id: 4, name: "Veggie", price: 9 },
+];
+var cashInRegister = 100;
+var nextOrderId = 1;
+var orderQueue = [];
+function addNewPizza(pizzaObj) {
+    menu.push(pizzaObj);
 }
-
 function placeOrder(pizzaName) {
-    const selectedPizza = menu.find(pizzaObj => pizzaObj.name === pizzaName)
-    cashInRegister += selectedPizza.price
-    const newOrder = { id: nextOrderId++, pizza: selectedPizza, status: "ordered" }
-    orderQueue.push(newOrder)
-    console.log("Placing order: ")
-    return newOrder
+    var selectedPizza = menu.find(function (pizzaObj) { return pizzaObj.name === pizzaName; });
+    if (!selectedPizza) {
+        console.error("".concat(pizzaName, " does not exist in the menu"));
+        return;
+    }
+    cashInRegister += selectedPizza.price;
+    var newOrder = { id: nextOrderId++, pizza: selectedPizza, status: "ordered" };
+    orderQueue.push(newOrder);
+    return newOrder;
 }
-
 function completeOrder(orderId) {
-    const order = orderQueue.find(order => order.id === orderId)
-    order.status = "completed"
-    console.log("Completing order: ")
-    return order
+    var order = orderQueue.find(function (order) { return order.id === orderId; });
+    if (!order) {
+        console.error("Id ".concat(orderId, " not found."));
+        return;
+    }
+    order.status = "completed";
+    return order;
 }
-
-cheeseRoyal = { name: "Cheese Royal", price: 12 }
-
-console.log(addnewPizza(cheeseRoyal))
-
-console.log(placeOrder("Cheese Royal"))
-
-console.log(placeOrder("Veggie"))
-
-console.log(completeOrder(1))
-
-console.log(completeOrder(2))
-
-console.log("Order queue: ", orderQueue)
-
-console.log(`R$ ${cashInRegister} at the cash register.`)
+function getPizzaDetail(identifier) {
+    if ((typeof identifier) === 'string') {
+        var selectedPizza = menu.find(function (pizzaObj) { return pizzaObj.name === identifier; });
+        console.log(selectedPizza);
+    }
+    else if ((typeof identifier) === 'number') {
+        var selectedPizza = menu.find(function (pizzaObj) { return pizzaObj.id === identifier; });
+        console.log(selectedPizza);
+    }
+    else {
+        console.log("Identifier ".concat(identifier, " not found."));
+    }
+}
+addNewPizza({ id: 5, name: "Chicken Bacon Ranch", price: 12 });
+addNewPizza({ id: 6, name: "BBQ Chicken", price: 12 });
+addNewPizza({ id: 7, name: "Spicy Sausage", price: 11 });
+placeOrder("Chicken Bacon Ranch");
+completeOrder(1);
+completeOrder(2);
+getPizzaDetail(3);
+getPizzaDetail("Veggie");
+console.log("Menu:", menu);
+console.log("Cash in register:", cashInRegister);
+console.log("Order queue:", orderQueue);
