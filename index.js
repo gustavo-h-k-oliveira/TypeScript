@@ -1,19 +1,21 @@
+var cashInRegister = 100;
+var nextOrderId = 1;
+var nextPizzaId = 5;
+var orderQueue = [];
 var menu = [
     { id: 1, name: "Margherita", price: 8 },
     { id: 2, name: "Pepperoni", price: 10 },
     { id: 3, name: "Hawaiian", price: 10 },
     { id: 4, name: "Veggie", price: 9 },
 ];
-var cashInRegister = 100;
-var nextOrderId = 1;
-var orderQueue = [];
 function addNewPizza(pizzaObj) {
+    pizzaObj.id = nextPizzaId++;
     menu.push(pizzaObj);
 }
 function placeOrder(pizzaName) {
     var selectedPizza = menu.find(function (pizzaObj) { return pizzaObj.name === pizzaName; });
     if (!selectedPizza) {
-        console.error("".concat(pizzaName, " does not exist in the menu"));
+        console.error("".concat(pizzaName, " does not exist in the menu."));
         return;
     }
     cashInRegister += selectedPizza.price;
@@ -32,23 +34,21 @@ function completeOrder(orderId) {
 }
 function getPizzaDetail(identifier) {
     if ((typeof identifier) === 'string') {
-        var selectedPizza = menu.find(function (pizzaObj) { return pizzaObj.name === identifier; });
-        console.log(selectedPizza);
+        return menu.find(function (pizzaObj) { return pizzaObj.name.toLowerCase() === identifier.toLowerCase(); });
     }
     else if ((typeof identifier) === 'number') {
-        var selectedPizza = menu.find(function (pizzaObj) { return pizzaObj.id === identifier; });
-        console.log(selectedPizza);
+        return menu.find(function (pizzaObj) { return pizzaObj.id === identifier; });
     }
     else {
-        console.log("Identifier ".concat(identifier, " not found."));
+        throw new TypeError("Identifier ".concat(identifier, " must be either a string or a number."));
     }
 }
-addNewPizza({ id: 5, name: "Chicken Bacon Ranch", price: 12 });
-addNewPizza({ id: 6, name: "BBQ Chicken", price: 12 });
-addNewPizza({ id: 7, name: "Spicy Sausage", price: 11 });
+addNewPizza({ id: 0, name: "Chicken Bacon Ranch", price: 12 });
+addNewPizza({ id: 0, name: "BBQ Chicken", price: 12 });
+addNewPizza({ id: 0, name: "Spicy Sausage", price: 11 });
 placeOrder("Chicken Bacon Ranch");
 completeOrder(1);
-completeOrder(2);
+completeOrder(2); // Non existent
 getPizzaDetail(3);
 getPizzaDetail("Veggie");
 console.log("Menu:", menu);

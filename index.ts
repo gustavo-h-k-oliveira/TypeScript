@@ -10,6 +10,11 @@ type Order = {
     status: "ordered" | "completed" 
 }
 
+let cashInRegister: number = 100
+let nextOrderId: number = 1
+let nextPizzaId: number = 5
+const orderQueue: Order[] = []
+
 const menu: Pizza[] = [
     { id: 1, name: "Margherita", price: 8 },
     { id: 2, name: "Pepperoni", price: 10 },
@@ -17,18 +22,15 @@ const menu: Pizza[] = [
     { id: 4, name: "Veggie", price: 9 },
 ]
 
-let cashInRegister: number = 100
-let nextOrderId: number = 1
-const orderQueue: Order[] = []
-
-function addNewPizza(pizzaObj: Pizza) {
+function addNewPizza(pizzaObj: Pizza): void  {
+    pizzaObj.id = nextPizzaId++
     menu.push(pizzaObj)
 }
 
-function placeOrder(pizzaName: string): Order | void {
+function placeOrder(pizzaName: string): Order | undefined {
     const selectedPizza = menu.find(pizzaObj => pizzaObj.name === pizzaName)
     if (!selectedPizza) {
-        console.error(`${pizzaName} does not exist in the menu`)
+        console.error(`${pizzaName} does not exist in the menu.`)
         return
     }
     cashInRegister += selectedPizza.price
@@ -37,7 +39,7 @@ function placeOrder(pizzaName: string): Order | void {
     return newOrder
 }
 
-function completeOrder(orderId: number): Order | void {
+function completeOrder(orderId: number): Order | undefined {
     const order = orderQueue.find(order => order.id === orderId)
     if (!order) {
         console.error(`Id ${orderId} not found.`)
@@ -47,7 +49,7 @@ function completeOrder(orderId: number): Order | void {
     return order
 }
 
-function getPizzaDetail(identifier: string | number) {
+function getPizzaDetail(identifier: string | number): Pizza | undefined {
     if ((typeof identifier) === 'string') {
         return menu.find(pizzaObj => pizzaObj.name.toLowerCase() === identifier.toLowerCase())
     }
@@ -55,13 +57,13 @@ function getPizzaDetail(identifier: string | number) {
         return menu.find(pizzaObj => pizzaObj.id === identifier)
     }
     else {
-        console.log(`Identifier ${identifier} not found.`)
+        throw new TypeError(`Identifier ${identifier} must be either a string or a number.`)
     }
 }
 
-addNewPizza({ id: 5, name: "Chicken Bacon Ranch", price: 12 })
-addNewPizza({ id: 6, name: "BBQ Chicken", price: 12 })
-addNewPizza({ id: 7, name: "Spicy Sausage", price: 11 })
+addNewPizza({ id: 0, name: "Chicken Bacon Ranch", price: 12 })
+addNewPizza({ id: 0, name: "BBQ Chicken", price: 12 })
+addNewPizza({ id: 0, name: "Spicy Sausage", price: 11 })
 
 placeOrder("Chicken Bacon Ranch")
 completeOrder(1)
